@@ -7,6 +7,8 @@ export default {
         black: "#222731",
         white: "#fefefe",
         blue: "#0079ff",
+        darkGray: "#697c9a",
+        bodyBg: "#f6f8ff",
       },
     },
   },
