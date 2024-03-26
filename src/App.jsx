@@ -7,9 +7,12 @@ import CompanyIcon from "../src/SVGs/CompanyIcon";
 
 function App() {
   const [userData, setUserData] = useState(null);
+  const [defaultUsername, setDefaultUsername] = useState("GhostHunter78");
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch("https://api.github.com/users/GhostHunter78")
+  // Function to fetch user data based on the provided username
+  const fetchUserData = (username) => {
+    fetch(`https://api.github.com/users/${username}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
@@ -18,11 +21,22 @@ function App() {
       })
       .then((data) => {
         setUserData(data);
+        setError(null);
       })
       .catch((error) => {
+        setError(error.message);
         console.error(error);
       });
+  };
+
+  useEffect(() => {
+    // Fetching default user data when component mounts
+    fetchUserData(defaultUsername);
   }, []);
+
+  const handleSearch = (username) => {
+    fetchUserData(username);
+  };
 
   let date = null;
 
@@ -50,7 +64,17 @@ function App() {
   return (
     <>
       <div className="w-screen px-6 pt-[30px] pb-[80px]">
-        <Header activeTheme={activeTheme} toggleTheme={toggleTheme} />
+        <Header
+          activeTheme={activeTheme}
+          toggleTheme={toggleTheme}
+          onSearch={handleSearch}
+          setError={setError}
+        />
+        {error && (
+          <p className="text-red-500 font-bold mono mt-2 ml-1">
+            User not found ;(
+          </p>
+        )}
         <div
           className="bg-white rounded-2xl mt-4 pt-8 px-6 pb-12"
           style={{
@@ -168,7 +192,7 @@ function App() {
                       color: activeTheme === "light" ? "#4b6a9b" : "white",
                     }}
                   >
-                    {userData.location}
+                    {userData.location === null ? "unknown" : userData.location}
                   </p>
                 </div>
                 <div className="flex items-start gap-4">

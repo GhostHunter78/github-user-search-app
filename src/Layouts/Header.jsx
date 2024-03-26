@@ -2,7 +2,16 @@ import Moon from "../SVGs/Moon";
 import Sun from "../SVGs/Sun";
 import SearchIcon from "../SVGs/SearchIcon";
 
-function Header({ toggleTheme, activeTheme }) {
+function Header({ toggleTheme, activeTheme, onSearch, setError }) {
+  const handleSearchClick = () => {
+    const input = document.getElementById("searchInput");
+    const username = input.value.trim();
+    if (username) {
+      onSearch(username);
+    } else {
+      setError("Username cannot be empty");
+    }
+  };
   return (
     <div>
       <div className="flex items-center justify-between w-full">
@@ -44,7 +53,10 @@ function Header({ toggleTheme, activeTheme }) {
           </button>
         </label>
         <label className="absolute grid place-items-center top-[-2px] right-2 bottom-0">
-          <button className="bg-blue border-0 rounded-lg outline-none mono text-[13px] font-bold text-white py-2 px-4">
+          <button
+            className="bg-blue border-0 rounded-lg outline-none mono text-[13px] font-bold text-white py-2 px-4"
+            onClick={handleSearchClick}
+          >
             Search
           </button>
         </label>
